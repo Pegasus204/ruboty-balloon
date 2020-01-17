@@ -16,11 +16,26 @@ module Ruboty
       def generate(message)
         length = calcLength(message)
 
-        (asakusasatellite? ? "text::\n" : "") +
+        syntax_prefix_style +
         [ upper_line(length),
           middle_line(length, message),
-          lower_line(length)
+          lower_line(length),
+          (slack? ? "```" : "")
         ].join("\n")
+      end
+
+      def syntax_prefix_style
+        return asakusasatellite_syntax if asakusasatellite?
+        return markdown_code_syntax if slack?
+        return ""
+      end
+
+      def asakusasatellite_syntax
+        "text::\n"
+      end
+
+      def markdown_code_syntax
+        "```\n"
       end
 
       def calcLength(str)
@@ -42,8 +57,16 @@ module Ruboty
         "￣" + ys + "" + ys.reverse + "￣"
       end
 
+      def balloon_response_style
+        ENV['BALLOON_RESPONSE_STYLE']
+      end
+
       def asakusasatellite?
          ENV['BALLOON_RESPONSE_STYLE'] == 'asakusasatellite'
+      end
+
+      def slack?
+        ENV['BALLOON_RESPONSE_STYLE'] == 'slack'
       end
     end
   end
