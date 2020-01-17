@@ -5,8 +5,17 @@ module Ruboty
     class Balloon < Base
       env :BALLOON_RESPONSE_STYLE, "asakusasatellite: Use 'text' style for AS", optional: true
 
-      on /(?<incident>突然の.+)/, name: "balloon", description: "突然の…"
-      on /balloon (?<incident>.+)/, name: "balloon", description: "balloon the message"
+      on(
+        %r{(?<incident>突然の.+)},
+        name: "balloon",
+        description: "突然の…"
+      )
+
+      on(
+        /balloon (?<incident>.+)/,
+        name: "balloon",
+        description: "balloon the message"
+      )
 
       def balloon(message)
         message.reply(generate(message[:incident]))
